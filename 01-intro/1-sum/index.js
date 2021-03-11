@@ -7,6 +7,6 @@
  *
  */
 export default function sum(m, n) {
-  let summa = m + n;
-  return (summa);
+
+  return m + n;
 }
