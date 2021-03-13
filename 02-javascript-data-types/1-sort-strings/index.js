@@ -5,10 +5,5 @@
  * @returns {string[]}
  */
 export function sortStrings(arr, param = 'asc') {
-  if (param === 'asc') {
-    return arr;
-  } else {
-    return arr;
-  }
 
 }
