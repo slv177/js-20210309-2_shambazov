@@ -6,11 +6,13 @@
  */
 
 export function sortStrings(arr, param = 'asc') {
-  let result = [...arr];
+  let result = [...arr]; // Copying array to new
   result = result.sort(function (a, b) {
-    return a.localeCompare(b, ["ru-ru-u-kf-upper"], { sensitivity: "case", caseFirst: "upper" });
+    // sorting with defined criteria
+    return a.localeCompare(b, ["ru-ru-u-kf-upper"], { sensitivity: "case"});
   });
   if (param === 'desc') {
+    // if descendant order, then reverse
     result.reverse();
   }
   return result;
