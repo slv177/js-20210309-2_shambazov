@@ -7,6 +7,7 @@
 export const pick = (obj, ...fields) => {
   let result = {};
   for (let key in obj) {
+    // add keys and values if they are mentioned in the array
     if (fields.includes(key)) {
       result[key] = obj[key];
     }
