@@ -1,6 +1,8 @@
 # omit
 
+
 Необходимо реализовать функцию, которая на вход будет принимать объект и произвольное
+
 количество строк - ключей объекта:
 
 ```javascript
@@ -15,6 +17,7 @@ omit(obj, 'field-1', 'field-2', ...'field-n');
 
 ```javascript
 const fruits = {
+
   apple: 2,
   orange: 4,
   banana: 3
@@ -22,5 +25,7 @@ const fruits = {
 
 console.log(omit(fruits, 'apple', 'banana')); // Вернет обїект - { orange: 4 }
 ```
+
+
 
 **Подсказка:** Обратите внимание на метод [Object.entries](https://learn.javascript.ru/keys-values-entries) 
