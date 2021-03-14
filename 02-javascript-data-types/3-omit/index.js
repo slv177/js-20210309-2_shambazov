@@ -6,7 +6,7 @@
  */
 
 export const omit = (obj, ...fields) => {
-  let result = {};
+  const result = {};
   for (let key in obj) {
     // add keys and values if they are not mentioned in the array
     if (!fields.includes(key)) {
