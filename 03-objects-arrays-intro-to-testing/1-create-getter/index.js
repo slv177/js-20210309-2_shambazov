@@ -4,10 +4,10 @@
  * @returns {function} - function-getter which allow get value from object by set path
  */
 export function createGetter(path) {
-  let keys = path.split('.');
+  const keys = path.split('.');
 
   return function (mainObject){
-    if(keys.length == 0) return undefined;
+    if(keys.length === 0) return;
     let currentObject = mainObject;
     while(keys.length) {
       let currentKey = keys.shift();
