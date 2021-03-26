@@ -5,6 +5,7 @@ export default class ColumnChart {
     this.label = currentOptions.label || '';
     this.link = currentOptions.link || '';
     this.value = currentOptions.value || 0;
+    this.chartHeight = 50;
     this.render(options) ;
   }
 
@@ -13,14 +14,14 @@ export default class ColumnChart {
 
     if (this.data.length) {
       element.innerHTML = `
-      <div class="column-chart_orders">
-        <div class="column-chart" style="--chart-height: 50">
+      <div class="column-chart_orders ">
+        <div class="column-chart " style="--chart-height: 50">
           <div class="column-chart__title">
             Total orders
-            <a href="/sales" class="column-chart__link">View all</a>
+            <a href="/sales" class="column-chart__link"></a>
           </div>
           <div class="column-chart__container">
-            <div data-element="header" class="column-chart__header">344</div>
+            <div data-element="header" class="column-chart__header"></div>
             <div data-element="body" class="column-chart__chart">
             </div>
           </div>
@@ -33,10 +34,10 @@ export default class ColumnChart {
         <div class="column-chart" style="--chart-height: 50">
           <div class="column-chart__title">
             Total orders
-            <a href="/sales" class="column-chart__link">View all</a>
+            <a href="/sales" class="column-chart__link"></a>
           </div>
           <div class="column-chart__container">
-            <div data-element="header" class="column-chart__header">344</div>
+            <div data-element="header" class="column-chart__header"></div>
             <div data-element="body" class="column-chart__chart">
             </div>
           </div>
@@ -79,6 +80,37 @@ export default class ColumnChart {
   }
 
   update(params) {
+    var graphbar = document.querySelector('.column-chart__chart');
+
+    if (graphbar.hasChildNodes) {
+      console.log(params);
+    }
+
+    const columnProps = getColumnProps(params);
+    graphbar.innerHTML = drawChartGraph(columnProps);
+
+
+    function drawChartGraph (dataForGraph) {
+      let result = String();
+      while (dataForGraph.length) {
+        const currentData = dataForGraph.shift();
+        result += '<div style="--value:' + currentData['value'] + '" data-tooltip="' + currentData['percent'] + '"></div>';
+      }
+      return result;
+    }
+
+    function getColumnProps(data) {
+      const maxValue = Math.max(...data);
+      const scale = 50 / maxValue;
+
+      return data.map(item => {
+        return {
+          percent: (item / maxValue * 100).toFixed(0) + '%',
+          value: String(Math.floor(item * scale))
+        };
+      });
+    }
+
 
   }
 
