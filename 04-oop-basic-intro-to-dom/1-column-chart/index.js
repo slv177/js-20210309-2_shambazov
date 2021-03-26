@@ -5,15 +5,14 @@ export default class ColumnChart {
     this.label = currentOptions.label || '';
     this.link = currentOptions.link || '';
     this.value = currentOptions.value || 0;
-
-    options ? this.render(options) : this.renderEmpty() ;
+    this.render(options) ;
   }
 
   render(params) {
     const element = document.createElement('div'); // (*)
 
     element.innerHTML = `
-    <div class="dashboard__chart_orders">
+    <div class="dashboard__chart_orders ">
     <div class="column-chart" style="--chart-height: 50">
       <div class="column-chart__title">
         Total orders
@@ -31,10 +30,10 @@ export default class ColumnChart {
     this.element = element.firstElementChild;
 
     let labelLabel = this.element.querySelector(".column-chart__title");
-    labelLabel.innerHTML = '<a href="/' + this.link + '"class="column-chart__link">' + this.label + '</a>';
+    labelLabel.innerHTML = '<a href="/' + this.link + '"class="column-chart__link"> Total ' + this.label + '</a>';
 
     let valueLabel = this.element.querySelector(".column-chart__header");
-    valueLabel.innerHTML = params['value'];
+    valueLabel.innerHTML = this.value;
 
 
     function getColumnProps(data) {
@@ -48,34 +47,25 @@ export default class ColumnChart {
       });
     }
 
-    function createHtmlForGraph(arrayForGraph) {
-      let result = String;
-      for (let item of arrayForGraph) {
-        const str = '<div style="--value: ' + item['value'] + '" data-tooltip="' + item['percent'] + '"></div>';
-        result += str;
+    // рисуем график
+    function drawChartGraph (dataForGraph) {
+      let result = String();
+      while (dataForGraph.length) {
+        const currentData = dataForGraph.shift();
+        result += '<div style="--value:' + currentData['value'] + '" data-tooltip="' + currentData['percent'] + '"></div>';
       }
       return result;
     }
 
-    let graph = this.element.querySelector(".column-chart__chart");
-    console.log(graph);
-    const arrayForGraph = getColumnProps(this.data);
-    graph.innerHTML = createHtmlForGraph(arrayForGraph);
-
-  }
+    let chartGraph = this.element.querySelector('.column-chart__chart');
+    if (this.data.length) {
+      const columnProps = getColumnProps(this.data);
+      chartGraph.innerHTML = drawChartGraph(columnProps);
+    }
+  };
 
   update(params) {
 
-  }
-
-  renderEmpty() {
-    const element = document.createElement('div'); // (*)
-    element.innerHTML = `
-    <div class="column-chart_loading">
-        <img src="charts-skeleton.svg" alt="No data image" >
-    </div>
-    `;
-    this.element = element.firstElementChild;
   }
 
   remove () {
