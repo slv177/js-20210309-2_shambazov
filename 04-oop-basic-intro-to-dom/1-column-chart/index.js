@@ -1,6 +1,5 @@
 export default class ColumnChart {
   constructor(options) {
-
     const currentOptions = options || {};
     this.data = currentOptions.data || [];
     this.label = currentOptions.label || '';
