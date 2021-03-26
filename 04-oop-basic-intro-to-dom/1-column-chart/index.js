@@ -11,21 +11,39 @@ export default class ColumnChart {
   render(params) {
     const element = document.createElement('div'); // (*)
 
-    element.innerHTML = `
-    <div class="dashboard__chart_orders ">
-    <div class="column-chart" style="--chart-height: 50">
-      <div class="column-chart__title">
-        Total orders
-        <a href="/sales" class="column-chart__link">View all</a>
-      </div>
-      <div class="column-chart__container">
-        <div data-element="header" class="column-chart__header">344</div>
-        <div data-element="body" class="column-chart__chart">
+    if (this.data.length) {
+      element.innerHTML = `
+      <div class="column-chart_orders">
+        <div class="column-chart" style="--chart-height: 50">
+          <div class="column-chart__title">
+            Total orders
+            <a href="/sales" class="column-chart__link">View all</a>
+          </div>
+          <div class="column-chart__container">
+            <div data-element="header" class="column-chart__header">344</div>
+            <div data-element="body" class="column-chart__chart">
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    </div>
-    `;
+      `;
+    } else {
+      element.innerHTML = `
+      <div class="column-chart_loading">
+        <div class="column-chart" style="--chart-height: 50">
+          <div class="column-chart__title">
+            Total orders
+            <a href="/sales" class="column-chart__link">View all</a>
+          </div>
+          <div class="column-chart__container">
+            <div data-element="header" class="column-chart__header">344</div>
+            <div data-element="body" class="column-chart__chart">
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
+    }
 
     this.element = element.firstElementChild;
 
@@ -34,7 +52,6 @@ export default class ColumnChart {
 
     let valueLabel = this.element.querySelector(".column-chart__header");
     valueLabel.innerHTML = this.value;
-
 
     function getColumnProps(data) {
       const maxValue = Math.max(...data);
@@ -47,7 +64,6 @@ export default class ColumnChart {
       });
     }
 
-    // рисуем график
     function drawChartGraph (dataForGraph) {
       let result = String();
       while (dataForGraph.length) {
@@ -58,11 +74,9 @@ export default class ColumnChart {
     }
 
     let chartGraph = this.element.querySelector('.column-chart__chart');
-    if (this.data.length) {
-      const columnProps = getColumnProps(this.data);
-      chartGraph.innerHTML = drawChartGraph(columnProps);
-    }
-  };
+    const columnProps = getColumnProps(this.data);
+    chartGraph.innerHTML = drawChartGraph(columnProps);
+  }
 
   update(params) {
 
