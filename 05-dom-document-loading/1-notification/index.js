@@ -9,7 +9,6 @@ export default class NotificationMessage {
   static isDisplay = false;
 
   render(){
-    console.log(this.type);
     const element = document.createElement('div');
     element.innerHTML = this.template;
     this.element = element.firstElementChild;
@@ -23,7 +22,6 @@ export default class NotificationMessage {
     default:
       console.log("unknown type");
     }
-
   }
 
   get template() {
@@ -41,10 +39,15 @@ export default class NotificationMessage {
   }
 
 
-  show (elementToDisplay = this.element) {
-    console.log(elementToDisplay)
+  show (elementToDisplay) {
     if (!NotificationMessage.isDisplay) {
-      document.body.append(elementToDisplay);
+      if (elementToDisplay) {
+        let newElement = elementToDisplay.append(this.element);
+        document.body.append(newElement);
+      } else {
+        document.body.append(this.element);
+      }
+
       NotificationMessage.isDisplay = true;
       setTimeout(() => this.remove(), this.duration);
     }
