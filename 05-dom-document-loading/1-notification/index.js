@@ -1,50 +1,34 @@
 export default class NotificationMessage {
   constructor(message, options = {}) {
-    this.text = message || '123';
-    this.duration = options['duration'] || 1000;
+    this.text = message || '';
+    this.duration = options['duration'] || 5000;
     this.type = options['type'] || 'unknown type';
-
-    if (this.type === 'success') {
-      this.render_success();
-    } else  {
-      this.render_error();
-    }
+    this.render();
   }
 
   static isDisplay = false;
 
-  render_success(){
-  const element = document.createElement('div');
-  element.innerHTML = this.template_success;
-  this.element = element.firstElementChild;
-  }
-
-  get template_success() {
-    return `
-    <body>
-       <div class="notification success" style="--value:2s">
-        <div class="timer"></div>
-        <div class="inner-wrapper">
-          <div class="notification-header">success</div>
-          <div class="notification-body">
-            ` + this.text + `
-          </div>
-        </div>
-      </div>
-    </body>
-    `;
-  }
-
-  render_error(){
+  render(){
+    console.log(this.type);
     const element = document.createElement('div');
-    element.innerHTML = this.template_error;
+    element.innerHTML = this.template;
     this.element = element.firstElementChild;
+    switch (this.type) {
+    case "success":
+      this.element.classList.add('success');
+      break;
+    case "error":
+      this.element.classList.add('error');
+      break;
+    default:
+      console.log("unknown type");
+    }
+
   }
 
-  get template_error() {
+  get template() {
     return `
-    <body>
-       <div class="notification error" style="--value:2s">
+       <div class="notification" style="--value:2s">
         <div class="timer"></div>
         <div class="inner-wrapper">
           <div class="notification-header">success</div>
@@ -53,7 +37,6 @@ export default class NotificationMessage {
           </div>
         </div>
       </div>
-    </body>
     `;
   }
 
