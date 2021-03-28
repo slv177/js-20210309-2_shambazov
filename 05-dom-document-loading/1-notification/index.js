@@ -1,8 +1,13 @@
 export default class NotificationMessage {
-  constructor(message, options = {}) {
-    this.text = message || '';
-    this.duration = options['duration'] || 5000;
-    this.type = options['type'] || 'unknown type';
+
+  constructor({
+    text = '',
+    duration = 2000,
+    type = ''
+  } = {}) {
+    this.text = text;
+    this.duration = duration;
+    this.type = type;
     this.render();
   }
 
@@ -13,14 +18,12 @@ export default class NotificationMessage {
     element.innerHTML = this.template;
     this.element = element.firstElementChild;
     switch (this.type) {
-    case "success":
-      this.element.classList.add('success');
-      break;
     case "error":
       this.element.classList.add('error');
       break;
     default:
-      console.log("unknown type");
+      this.element.classList.add('success');
+      break;
     }
   }
 
@@ -38,11 +41,10 @@ export default class NotificationMessage {
     `;
   }
 
-
   show (elementToDisplay) {
     if (!NotificationMessage.isDisplay) {
       if (elementToDisplay) {
-        let newElement = elementToDisplay.append(this.element);
+        const newElement = elementToDisplay.append(this.element);
         document.body.append(newElement);
       } else {
         document.body.append(this.element);

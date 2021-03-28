@@ -11,11 +11,11 @@ export default class SortableTable {
     element.innerHTML = this.tableHeader;
     this.element = element.firstElementChild;
 
-    let tableRows = (document.createElement('div'));
+    const tableRows = (document.createElement('div'));
     tableRows.innerHTML = this.tableRows(dataToRender);
     document.body.appendChild(tableRows);
 
-    let tableFooter = (document.createElement('div'));
+    const tableFooter = (document.createElement('div'));
     tableFooter.innerHTML = this.tableFooter;
     document.body.appendChild(tableFooter);
   }
