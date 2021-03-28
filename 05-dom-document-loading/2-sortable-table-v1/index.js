@@ -1,9 +1,9 @@
-import {sortStrings} from "../../02-javascript-data-types/1-sort-strings";
-
 export default class SortableTable {
   constructor(header, data = {}) {
-    this.sort(header, data);
-    this.render(data['data']);
+    this.data = data['data'];
+    this.header = header;
+    this.sortStrings();
+    this.render(this.data);
   }
 
   render(dataToRender){
@@ -12,7 +12,6 @@ export default class SortableTable {
     this.element = element.firstElementChild;
 
     let tableRows = (document.createElement('div'));
-
     tableRows.innerHTML = this.tableRows(dataToRender);
     document.body.appendChild(tableRows);
 
@@ -21,20 +20,25 @@ export default class SortableTable {
     document.body.appendChild(tableFooter);
   }
 
-  sort(header, data) {
+  sort(fieldValue, orderValue){
+    this.data = this.sortStrings(fieldValue, orderValue);
+    this.removeElementsByClass('sortable-table__body');
+    this.render(this.data);
+  }
 
-    let result = data['data'];
-
-    result = result.sort(function (a, b) {
-      if (header === 'desc'){
-
-        return b['title'].localeCompare(a['title'], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
+  sortStrings(field = 'title', order = 'asc') {
+    return this.data.sort(function (a, b) {
+      if (order === 'desc') {
+        if (typeof b[field] === 'number') {
+          return b[field] - a[field];
+        }
+        return b[field].localeCompare(a[field], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
       }
-
-      return a['title'].localeCompare(b['title'], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
+      if (typeof b[field] === 'number') {
+        return a[field] - b[field];
+      }
+      return a[field].localeCompare(b[field], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
     });
-
-    return result;
   }
 
   get tableHeader(){
@@ -93,6 +97,12 @@ export default class SortableTable {
       .join('') + '</div><div data-element="loading" class="loading-line sortable-table__loading-line"></div>';
   }
 
+  removeElementsByClass(className){
+    let elements = document.getElementsByClassName(className);
+    while (elements.length > 0){
+      elements[0].parentNode.removeChild(elements[0]);
+    }
+  }
 
   destroy() {
     this.remove();
