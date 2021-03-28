@@ -2,6 +2,7 @@ export default class SortableTable {
   constructor(header, data = {}) {
     this.data = data['data'];
     this.header = header;
+    console.log(this.header);
     this.sortStrings();
     this.render(this.data);
   }
@@ -45,7 +46,7 @@ export default class SortableTable {
     const tableHeader = `<div data-element="productsContainer" class="products-list__container">
       <div class="sortable-table">
 
-        <div data-element="header" class="sortable-table__header sortable-table__row">
+      <div data-element="header" class="sortable-table__header sortable-table__row">
           <div class="sortable-table__cell" data-id="images" data-sortable="false" data-order="asc">
             <span>Image</span>
           </div>
@@ -68,6 +69,13 @@ export default class SortableTable {
     return tableHeader;
   }
 
+  tableHeaderRow(){
+    this.header.forEach(element =>
+      console.log('<div className="sortable-table__cell">' + element['title'] +'</div>')
+
+  )
+  }
+
   get tableFooter(){
     const tableFooter = `<div data-element="emptyPlaceholder" class="sortable-table__empty-placeholder">
           <div>
@@ -82,12 +90,14 @@ export default class SortableTable {
   }
 
   tableRows(dataToDisplay){
+    this.tableHeaderRow();
     return '<div data-element="body" class="sortable-table__body">' + dataToDisplay
       .map (item => {
         return `
            <a href=" ${item['id']} " class="sortable-table__row">
             <div class="sortable-table__cell">
-              <img class="sortable-table-image" alt="Image" src="${item['images'][0]['url']}"></div>
+              <img class="sortable-table-image" alt="Image" src="${item['images'][0]['url']}">
+            </div>
             <div class="sortable-table__cell"> ${item['title']}1</div>
             <div class="sortable-table__cell"> ${item['quantity']}</div>
             <div class="sortable-table__cell"> ${item['price']}</div>
