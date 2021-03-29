@@ -1,8 +1,11 @@
 export default class SortableTable {
-  constructor(header, data = {}) {
-    this.data = data['data'];
-    this.header = header;
-    console.log(this.header);
+
+  constructor({
+    header = [],
+    data = {},
+  } = {}) {
+    this.header = arguments[0];
+    this.data = arguments[1].data;
     this.sortStrings();
     this.render(this.data);
   }
