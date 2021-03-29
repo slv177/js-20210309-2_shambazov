@@ -2,12 +2,16 @@ export default class NotificationMessage {
 
   constructor({
     text = '',
-    duration = 2000,
+    duration = 1000,
     type = ''
   } = {}) {
-    this.text = text;
-    this.duration = duration;
-    this.type = type;
+    if(arguments[1]){
+      this.text = arguments[0];
+      this.duration = arguments[1].duration;
+      this.type = arguments[1].type;
+    } else {
+      this.text = arguments[0];
+    }
     this.render();
   }
 
