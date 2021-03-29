@@ -41,18 +41,18 @@ export default class ColumnChart {
     }
 
     const labelLabel = this.element.querySelector(".column-chart__title");
-    labelLabel.innerHTML = '<a href="/' + this.link + '"class="column-chart__link"> Total ' + this.label + '</a>';
+    labelLabel.innerHTML = `<a href= ${this.link} class="column-chart__link"> Total ${this.label}</a>`;
 
     const valueLabel = this.element.querySelector(".column-chart__header");
     valueLabel.innerHTML = this.value;
 
-    let chartGraph = this.element.querySelector('.column-chart__chart');
+    const chartGraph = this.element.querySelector('.column-chart__chart');
     const columnProps = this.getColumnProps(this.data);
     chartGraph.innerHTML = this.drawChartGraph(columnProps);
   }
 
   update(params) {
-    let graphbar = document.querySelector('.column-chart__chart');
+    const graphbar = document.querySelector('.column-chart__chart');
 
     const columnProps = this.getColumnProps(params);
     graphbar.innerHTML = this.drawChartGraph(columnProps);
