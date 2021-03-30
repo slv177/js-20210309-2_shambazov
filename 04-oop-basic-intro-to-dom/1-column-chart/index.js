@@ -41,62 +41,43 @@ export default class ColumnChart {
     }
 
     const labelLabel = this.element.querySelector(".column-chart__title");
-    labelLabel.innerHTML = '<a href="/' + this.link + '"class="column-chart__link"> Total ' + this.label + '</a>';
+    labelLabel.innerHTML = `<a href= ${this.link} class="column-chart__link"> Total ${this.label}</a>`;
 
     const valueLabel = this.element.querySelector(".column-chart__header");
     valueLabel.innerHTML = this.value;
 
-    function getColumnProps(data){
-      const maxValue = Math.max(...data);
-      const scale = 50 / maxValue;
-      return data.map(item => {
-        return {
-          percent: (item / maxValue * 100).toFixed(0) + '%',
-          value: String(Math.floor(item * scale))
-        };
-      });
-    }
-
-    function drawChartGraph (dataForGraph) {
-      let result = String();
-      while (dataForGraph.length) {
-        const currentData = dataForGraph.shift();
-        result += '<div style="--value:' + currentData['value'] + '" data-tooltip="' + currentData['percent'] + '"></div>';
-      }
-      return result;
-    }
-
-    let chartGraph = this.element.querySelector('.column-chart__chart');
-    const columnProps = getColumnProps(this.data);
-    chartGraph.innerHTML = drawChartGraph(columnProps);
+    const chartGraph = this.element.querySelector('.column-chart__chart');
+    const columnProps = this.getColumnProps(this.data);
+    chartGraph.innerHTML = this.drawChartGraph(columnProps);
   }
 
   update(params) {
-    let graphbar = document.querySelector('.column-chart__chart');
+    const graphbar = document.querySelector('.column-chart__chart');
 
-    const columnProps = getColumnProps(params);
-    graphbar.innerHTML = drawChartGraph(columnProps);
+    const columnProps = this.getColumnProps(params);
+    graphbar.innerHTML = this.drawChartGraph(columnProps);
 
-    function drawChartGraph (dataForGraph) {
-      let result = String();
-      while (dataForGraph.length) {
-        const currentData = dataForGraph.shift();
-        result += '<div style="--value:' + currentData['value'] + '" data-tooltip="' + currentData['percent'] + '"></div>';
-      }
-      return result;
+  }
+
+  drawChartGraph (dataForGraph) {
+    let result = '';
+    while (dataForGraph.length) {
+      const currentData = dataForGraph.shift();
+      result += '<div style="--value:' + currentData['value'] + '" data-tooltip="' + currentData['percent'] + '"></div>';
     }
+    return result;
+  }
 
-    function getColumnProps(data) {
-      const maxValue = Math.max(...data);
-      const scale = 50 / maxValue;
+  getColumnProps(data) {
+    const maxValue = Math.max(...data);
+    const scale = 50 / maxValue;
 
-      return data.map(item => {
-        return {
-          percent: (item / maxValue * 100).toFixed(0) + '%',
-          value: String(Math.floor(item * scale))
-        };
-      });
-    }
+    return data.map(item => {
+      return {
+        percent: (item / maxValue * 100).toFixed(0) + '%',
+        value: String(Math.floor(item * scale))
+      };
+    });
   }
 
   remove () {
