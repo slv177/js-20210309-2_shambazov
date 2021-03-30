@@ -66,15 +66,6 @@ export default class SortableTable {
   }
 
   tableBodyRow(dataToDisplay) {
-    //           <a href=" ${item['id']} " class="sortable-table__row">
-    //               <div class="sortable-table__cell">
-    //                   <img class="sortable-table-image" alt="Image" src="${item['images'][0]['url']}">
-    //               </div>
-    //               <div class="sortable-table__cell"> ${item['title']}1</div>
-    //               <div class="sortable-table__cell"> ${item['quantity']}</div>
-    //               <div class="sortable-table__cell"> ${item['price']}</div>
-    //               <div class="sortable-table__cell"> ${item['sales']}</div>
-    //         </a>
 
     let tableBody = document.createElement('div');
 
@@ -82,18 +73,7 @@ export default class SortableTable {
       let row = document.createElement('a');
       row.href = rowData.id;
       row.classList.add('sortable-table__row');
-      // for (const cell of this.header) {
-      //   let cellContent = document.createElement('div');
-      //   cellContent.innerHTML = "<div class=\'sortable-table__cell\'> <p>123</p> </div>";
-      //   row.prepend(cellContent);
-      // }
 
-      // while (this.header.length > 0)
-      // {
-      //   let cellContent = document.createElement('div');
-      //   cellContent.innerHTML = "<div class=\'sortable-table__cell\'> <p>123</p> </div>";
-      //   row.prepend(cellContent);
-      // }
 
       for (let i = 0; i < this.header.length; i++) {
         let cellContent = document.createElement('div');
@@ -109,7 +89,7 @@ export default class SortableTable {
 
       tableBody.appendChild(row);
     }
-    // console.log("tableBody", tableBody);
+
     return tableBody;
   }
 
