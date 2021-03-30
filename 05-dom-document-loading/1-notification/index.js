@@ -38,7 +38,7 @@ export default class NotificationMessage {
         <div class="inner-wrapper">
           <div class="notification-header">success</div>
           <div class="notification-body">
-            ` + this.text + `
+            ${this.text}
           </div>
         </div>
       </div>

@@ -74,7 +74,7 @@ export default class SortableTable {
     // );
 
     for (const item of this.header) {
-      result += '<div class="sortable-table__cell" data-id="' + item.id + '" data-sortable="false" data-order="asc"><span>' + item.title + '</span></div>'
+      result += `<div class="sortable-table__cell" data-id= ${item.id} data-sortable="false" data-order="asc"><span> ${item.title} </span></div>`;
     }
 
     return result;
