@@ -5,7 +5,7 @@ export default class NotificationMessage {
     duration = 1000,
     type = ''
   } = {}) {
-    if(arguments[1]){
+    if (arguments[1]) {
       this.text = arguments[0];
       this.duration = arguments[1].duration;
       this.type = arguments[1].type;
@@ -17,7 +17,7 @@ export default class NotificationMessage {
 
   static isDisplay = false;
 
-  render(){
+  render() {
     const element = document.createElement('div');
     element.innerHTML = this.template;
     this.element = element.firstElementChild;
@@ -45,15 +45,9 @@ export default class NotificationMessage {
     `;
   }
 
-  show (elementToDisplay) {
+  show () {
     if (!NotificationMessage.isDisplay) {
-      if (elementToDisplay) {
-        const newElement = elementToDisplay.append(this.element);
-        document.body.append(newElement);
-      } else {
-        document.body.append(this.element);
-      }
-
+      document.body.append(this.element);
       NotificationMessage.isDisplay = true;
       setTimeout(() => this.remove(), this.duration);
     }
