@@ -6,10 +6,7 @@ export default class SortableTable {
   } = {}) {
     this.header = arguments[0];
     this.data = arguments[1].data;
-    this.sortStrings();
     this.render(this.data);
-    console.log(this.header);
-    console.log(this.data);
   }
 
   render(dataToRender) {
@@ -31,17 +28,8 @@ export default class SortableTable {
     let tableBodyRows = (document.createElement('div'));
     tableBodyRows.appendChild(this.tableBodyRow(dataToRender));
 
-    // let tableBodyRowCollection = tableBodyRows.children;
-    // let body = document.querySelector(".sortable-table__body")
-    // while (tableBodyRowCollection.length > 0)
-    // {
-    //   body.appendChild(tableBodyRowCollection[0])
-    // }
-
     let body = document.querySelector(".sortable-table__body");
     body.appendChild(tableBodyRows);
-
-    // console.log("finally", element);
   }
 
   get tableTemplate(){
@@ -69,9 +57,6 @@ export default class SortableTable {
 
   get tableHeaderRow() {
     let result = '';
-    // result += this.header.forEach(element =>
-    //   console.log('<div className="sortable-table__cell">' + element['title'] +'</div>')
-    // );
 
     for (const item of this.header) {
       result += `<div class="sortable-table__cell" data-id= ${item.id} data-sortable="false" data-order="asc"><span> ${item.title} </span></div>`;
