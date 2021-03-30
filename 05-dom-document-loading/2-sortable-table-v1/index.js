@@ -8,6 +8,8 @@ export default class SortableTable {
     this.data = arguments[1].data;
     this.sortStrings();
     this.render(this.data);
+    console.log(this.header);
+    console.log(this.data);
   }
 
   render(dataToRender) {
@@ -18,7 +20,7 @@ export default class SortableTable {
 
     let tableHeaderRow = (document.createElement('div'));
     tableHeaderRow.innerHTML = this.tableHeaderRow;
-    // element.appendChild(tableHeaderRow);
+    element.appendChild(tableHeaderRow);
     let tableHeaderRowCollection = tableHeaderRow.children;
     let header = document.querySelector(".sortable-table__header")
     while (tableHeaderRowCollection.length > 0)
@@ -27,15 +29,19 @@ export default class SortableTable {
     }
 
     let tableBodyRows = (document.createElement('div'));
-    tableBodyRows.innerHTML = this.tableBodyRow(dataToRender);
-    let tableBodyRowCollection = tableBodyRows.children;
-    let body = document.querySelector(".sortable-table__body")
-    while (tableBodyRowCollection.length > 0)
-    {
-      element.appendChild(tableBodyRowCollection[0])
-    }
+    tableBodyRows.appendChild(this.tableBodyRow(dataToRender));
 
-    console.log("finally", element);
+    // let tableBodyRowCollection = tableBodyRows.children;
+    // let body = document.querySelector(".sortable-table__body")
+    // while (tableBodyRowCollection.length > 0)
+    // {
+    //   body.appendChild(tableBodyRowCollection[0])
+    // }
+
+    let body = document.querySelector(".sortable-table__body");
+    body.appendChild(tableBodyRows);
+
+    // console.log("finally", element);
   }
 
   get tableTemplate(){
@@ -75,23 +81,51 @@ export default class SortableTable {
   }
 
   tableBodyRow(dataToDisplay) {
-    let result = '';
+    //           <a href=" ${item['id']} " class="sortable-table__row">
+    //               <div class="sortable-table__cell">
+    //                   <img class="sortable-table-image" alt="Image" src="${item['images'][0]['url']}">
+    //               </div>
+    //               <div class="sortable-table__cell"> ${item['title']}1</div>
+    //               <div class="sortable-table__cell"> ${item['quantity']}</div>
+    //               <div class="sortable-table__cell"> ${item['price']}</div>
+    //               <div class="sortable-table__cell"> ${item['sales']}</div>
+    //         </a>
 
-    for (const item of dataToDisplay) {
-      result += `
-                <a href=" ${item['id']} " class="sortable-table__row">
-                    <div class="sortable-table__cell">
-                        <img class="sortable-table-image" alt="Image" src="${item['images'][0]['url']}">
-                    </div>
-                    <div class="sortable-table__cell"> ${item['title']}1</div>
-                    <div class="sortable-table__cell"> ${item['quantity']}</div>
-                    <div class="sortable-table__cell"> ${item['price']}</div>
-                    <div class="sortable-table__cell"> ${item['sales']}</div>
-              </a>
-      `
+    let tableBody = document.createElement('div');
+
+    for (const rowData of dataToDisplay) {
+      let row = document.createElement('a');
+      row.href = rowData.id;
+      row.classList.add('sortable-table__row');
+      // for (const cell of this.header) {
+      //   let cellContent = document.createElement('div');
+      //   cellContent.innerHTML = "<div class=\'sortable-table__cell\'> <p>123</p> </div>";
+      //   row.prepend(cellContent);
+      // }
+
+      // while (this.header.length > 0)
+      // {
+      //   let cellContent = document.createElement('div');
+      //   cellContent.innerHTML = "<div class=\'sortable-table__cell\'> <p>123</p> </div>";
+      //   row.prepend(cellContent);
+      // }
+
+      for (let i = 0; i < this.header.length; i++) {
+        let cellContent = document.createElement('div');
+        let idFromHeader = this.header[i].id;
+        cellContent.classList.add('sortable-table__cell');
+        if (idFromHeader === 'images') {
+          cellContent.innerHTML = `<img class="sortable-table-image" alt="Image" src=${rowData[idFromHeader][0].url}>`;
+        } else {
+          cellContent.textContent = rowData[idFromHeader];
+        }
+        row.append(cellContent);
+      }
+
+      tableBody.appendChild(row);
     }
-
-    return result;
+    // console.log("tableBody", tableBody);
+    return tableBody;
   }
 
   removeElementsByClass(className){
@@ -125,6 +159,6 @@ export default class SortableTable {
   }
 
   destroy() {
-    this.remove();
+    this.removeElementsByClass();
   }
 }
