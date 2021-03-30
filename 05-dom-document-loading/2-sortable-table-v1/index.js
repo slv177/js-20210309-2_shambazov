@@ -1,11 +1,11 @@
 export default class SortableTable {
 
-  constructor({
+  constructor(
     header = [],
     data = {},
-  } = {}) {
-    this.header = arguments[0];
-    this.data = arguments[1].data;
+  ) {
+    this.header = header;
+    this.data = data.data;
     this.render(this.data);
   }
 
