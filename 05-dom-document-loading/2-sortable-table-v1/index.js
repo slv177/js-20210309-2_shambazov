@@ -2,10 +2,10 @@ export default class SortableTable {
 
   constructor(
     header = [],
-    data = {},
+    {data} = {},
   ) {
     this.header = header;
-    this.data = data.data;
+    this.data = data;
     this.render(this.data);
   }
 
@@ -30,28 +30,28 @@ export default class SortableTable {
 
     let body = document.querySelector(".sortable-table__body");
     body.appendChild(tableBodyRows);
+
+    this.subElements = this.getSubElements(element);
   }
 
   get tableTemplate(){
     return `
-          <div data-element="productsContainer" class="products-list__container">
-              <div class="sortable-table">
-                  <div data-element="header" class="sortable-table__header sortable-table__row"></div>
-
-                  <div data-element="body" class="sortable-table__body">
-
-
-                    <div data-element="loading" class="loading-line sortable-table__loading-line"></div>
-                  </div>
-
-                  <div data-element="emptyPlaceholder" class="sortable-table__empty-placeholder">
+        <div data-element="productsContainer" class="products-list__container">
+            <div class="sortable-table">
+                <div data-element="header" class="sortable-table__header sortable-table__row">
+                </div>
+                <div data-element="body" class="sortable-table__body">
+                </div>
+                <div data-element="loading" class="loading-line sortable-table__loading-line">
+                </div>
+                <div data-element="emptyPlaceholder" class="sortable-table__empty-placeholder">
                     <div>
-                      <p>No products satisfies your filter criteria</p>
-                      <button type="button" class="button-primary-outline">Reset all filters</button>
+                        <p>No products satisfies your filter criteria</p>
+                        <button type="button" class="button-primary-outline">Reset all filters</button>
                     </div>
-                  </div>
-              </div>
-          </div>
+                </div>
+            </div>
+        </div>
   `;
   }
 
@@ -93,6 +93,27 @@ export default class SortableTable {
     return tableBody;
   }
 
+  getSubElements(element) {
+    // const elements = element.querySelectorAll('[data-element]');
+    // console.log("elements", elements);
+    // return [...elements].reduce((accum, subElement) => {
+    //   accum[subElement.dataset.element] = subElement;
+    //   console.log("accum", accum);
+    //   return accum;
+    // }, {});
+
+    const result = {};
+    const elements = element.querySelectorAll('[data-element]');
+
+    for (const item of elements) {
+      console.log("item", item);
+      const name = item.dataset.element;
+      result[name] = item;
+    }
+    console.log("result", result);
+    return result;
+  }
+
   removeElementsByClass(className){
     let elements = document.getElementsByClassName(className);
     while (elements.length > 0){
@@ -124,6 +145,7 @@ export default class SortableTable {
   }
 
   destroy() {
-    this.removeElementsByClass();
+    // this.element.remove();
+    // this.subElements = {};
   }
 }
