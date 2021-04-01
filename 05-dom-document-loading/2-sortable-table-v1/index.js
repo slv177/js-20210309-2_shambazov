@@ -10,29 +10,21 @@ export default class SortableTable {
   }
 
   render(dataToRender) {
-    let element = document.createElement('div');
+    const element = document.createElement('div');
     element.innerHTML = this.tableTemplate;
     this.element = element.firstElementChild;
     document.body.append(element);
-
-    let tableHeaderRow = (document.createElement('div'));
+    const tableHeaderRow = (document.createElement('div'));
     tableHeaderRow.innerHTML = this.tableHeaderRow;
-    element.appendChild(tableHeaderRow);
-    let tableHeaderRowCollection = tableHeaderRow.children;
-    let header = document.querySelector(".sortable-table__header")
+    element.append(tableHeaderRow);
+    const tableHeaderRowCollection = tableHeaderRow.children;
+    const header = document.querySelector(".sortable-table__header")
     while (tableHeaderRowCollection.length > 0)
     {
-      header.appendChild(tableHeaderRowCollection[0])
+      header.append(tableHeaderRowCollection[0])
     }
 
-    // let tableBodyRows = (document.createElement('div'));
-    // tableBodyRows.appendChild(this.tableBodyRow(dataToRender));
-
-    let body = document.querySelector(".sortable-table__body");
-
-    console.error(this.tableBodyRow(dataToRender));
-
-    // body.append(this.tableBodyRow(dataToRender));
+    const body = document.querySelector(".sortable-table__body");
 
     body.innerHTML = this.tableBodyRow(dataToRender);
 
@@ -64,7 +56,7 @@ export default class SortableTable {
     let result = '';
 
     for (const item of this.header) {
-      result += `<div class="sortable-table__cell" data-id= ${item.id} data-sortable="false" data-order="asc"><span> ${item.title} </span></div>`;
+      result += `<div class="sortable-table__cell" data-id= ${item.id} data-sortable="false"><span> ${item.title} </span></div>`;
     }
 
     return result;
@@ -99,24 +91,11 @@ export default class SortableTable {
   }
 
   getSubElements(element) {
-    // const elements = element.querySelectorAll('[data-element]');
-    // console.log("elements", elements);
-    // return [...elements].reduce((accum, subElement) => {
-    //   accum[subElement.dataset.element] = subElement;
-    //   console.log("accum", accum);
-    //   return accum;
-    // }, {});
-
-    const result = {};
     const elements = element.querySelectorAll('[data-element]');
-
-    for (const item of elements) {
-      // console.log("item", item);
-      const name = item.dataset.element;
-      result[name] = item;
-    }
-    // console.log("result", result);
-    return result;
+    return [...elements].reduce((accum, subElement) => {
+      accum[subElement.dataset.element] = subElement;
+      return accum;
+    }, {});
   }
 
   removeElementsByClass(className){
@@ -149,8 +128,11 @@ export default class SortableTable {
     });
   }
 
-  destroy() {
+  remove() {
     this.element.remove();
-    this.subElements = {};
+  }
+
+  destroy() {
+    this.remove();
   }
 }
