@@ -20,20 +20,21 @@ export default class SortableTable {
     element.appendChild(tableHeaderRow);
     let tableHeaderRowCollection = tableHeaderRow.children;
     let header = document.querySelector(".sortable-table__header")
-    while (tableHeaderRowCollection.length)
+    while (tableHeaderRowCollection.length > 0)
     {
       header.appendChild(tableHeaderRowCollection[0])
     }
 
-    let tableBodyRow = (document.createElement('div'));
-    tableBodyRow = this.tableBodyRow(this.data);
-    let tableBodyRowCollection = tableBodyRow.children;
+    // let tableBodyRows = (document.createElement('div'));
+    // tableBodyRows.appendChild(this.tableBodyRow(dataToRender));
+
     let body = document.querySelector(".sortable-table__body");
 
-    while (tableBodyRowCollection.length)
-    {
-      body.appendChild(tableBodyRowCollection[0])
-    }
+    console.error(this.tableBodyRow(dataToRender));
+
+    // body.append(this.tableBodyRow(dataToRender));
+
+    body.innerHTML = this.tableBodyRow(dataToRender);
 
     this.subElements = this.getSubElements(element);
   }
@@ -61,18 +62,23 @@ export default class SortableTable {
 
   get tableHeaderRow() {
     let result = '';
+
     for (const item of this.header) {
       result += `<div class="sortable-table__cell" data-id= ${item.id} data-sortable="false" data-order="asc"><span> ${item.title} </span></div>`;
     }
+
     return result;
   }
 
   tableBodyRow(dataToDisplay) {
+
     let tableBody = document.createElement('div');
+
     for (const rowData of dataToDisplay) {
-      const row = document.createElement('a');
+      let row = document.createElement('a');
       row.href = rowData.id;
       row.classList.add('sortable-table__row');
+
 
       for (let i = 0; i < this.header.length; i++) {
         let cellContent = document.createElement('div');
@@ -85,20 +91,32 @@ export default class SortableTable {
         }
         row.append(cellContent);
       }
+
       tableBody.appendChild(row);
     }
-    console.log("tableBody", tableBody);
-    return tableBody;
+
+    return tableBody.innerHTML;
   }
 
   getSubElements(element) {
+    // const elements = element.querySelectorAll('[data-element]');
+    // console.log("elements", elements);
+    // return [...elements].reduce((accum, subElement) => {
+    //   accum[subElement.dataset.element] = subElement;
+    //   console.log("accum", accum);
+    //   return accum;
+    // }, {});
+
+    const result = {};
     const elements = element.querySelectorAll('[data-element]');
-    console.log("elements", elements);
-    return [...elements].reduce((accum, subElement) => {
-      accum[subElement.dataset.element] = subElement;
-      console.log("accum", accum);
-      return accum;
-    }, {});
+
+    for (const item of elements) {
+      // console.log("item", item);
+      const name = item.dataset.element;
+      result[name] = item;
+    }
+    // console.log("result", result);
+    return result;
   }
 
   removeElementsByClass(className){
@@ -132,7 +150,7 @@ export default class SortableTable {
   }
 
   destroy() {
-    // this.element.remove();
-    // this.subElements = {};
+    this.element.remove();
+    this.subElements = {};
   }
 }
