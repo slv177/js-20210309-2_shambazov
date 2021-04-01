@@ -53,13 +53,9 @@ export default class SortableTable {
   }
 
   get tableHeaderRow() {
-    let result = '';
 
-    for (const item of this.header) {
-      result += `<div class="sortable-table__cell" data-id= ${item.id} data-sortable="false"><span> ${item.title} </span></div>`;
-    }
+    return this.header.map(item => `<div class="sortable-table__cell" data-id=${item.id} data-sortable="false"><span>${item.title}</span></div>`).join("");
 
-    return result;
   }
 
   tableBodyRow(dataToDisplay) {
@@ -114,18 +110,23 @@ export default class SortableTable {
   }
 
   sortStrings(field = 'title', order = 'asc') {
-    return this.data.sort(function (a, b) {
-      if (order === 'desc') {
+
+    switch (order){
+    case "desc":
+      return sort(this.data, -1);
+      break;
+    default:
+      return sort(this.data, 1);
+    }
+
+    function sort(arr, direction){
+      return arr.sort(function (a, b) {
         if (typeof b[field] === 'number') {
-          return b[field] - a[field];
+          return direction * a[field] - b[field];
         }
-        return b[field].localeCompare(a[field], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
-      }
-      if (typeof b[field] === 'number') {
-        return a[field] - b[field];
-      }
-      return a[field].localeCompare(b[field], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
-    });
+        return direction * a[field].localeCompare(b[field], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
+      });
+    }
   }
 
   remove() {
