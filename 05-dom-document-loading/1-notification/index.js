@@ -1,5 +1,7 @@
 export default class NotificationMessage {
 
+  static isDisplay = false;
+
   constructor(
     text = '',
     {duration = 1000,
@@ -14,8 +16,6 @@ export default class NotificationMessage {
     }
     this.render();
   }
-
-  static isDisplay = false;
 
   render() {
     const element = document.createElement('div');
