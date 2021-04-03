@@ -1,69 +1,64 @@
 class Tooltip {
-  constructor() {
-    // тут какие то объявления со стрелками
+  showTooltip = (event) => {
+    const shift = 10;
+    const tooltips = event.target.closest('[data-tooltip]');
 
-    this.addEventListeners();
-
+    if (!tooltips) {
+      return;
     }
+
+    if (this.element){
+      this.element.remove();
+    }
+
+    this.render();
+    this.element.innerHTML = tooltips.dataset.tooltip;
+    this.element.style.left = event.clientX + shift + 'px';
+    this.element.style.top = event.clientY + shift + 'px';
+  }
+
+  constructor() {
+    this.addEventListeners();
+    this.removeEventListeners();
+  }
 
   addEventListeners(){
-    const tooltip = document.querySelector("[data-tooltip]");
-
-    tooltip.addEventListener('pointerover', event => {
-      console.log("tooltipFoo", 'pointerover', event.clientX, event.clientY);
-      let target = event.target;
-      showTooltop(event);
-    });
-
-    tooltip.addEventListener('pointermove', event => {
-      console.log("tooltipFoo", 'pointermove', event.clientX, event.clientY);
-      let target = event.target;
-      showTooltop(event);
-    });
-
-    function showTooltop(event) {
-      let target = event.target;
-      let message = document.createElement('div');
-      message.classList.add('tooltip');
-      message.innerHTML = target.dataset.tooltip;
-      message.style.left = event.clientX + 10 + 'px';
-      message.style.top = event.clientY + 10 + 'px';
-      document.body.append(message);
+    document.addEventListener('pointerover', event => {
+      this.showTooltip(event);
     }
+    );
+
+    document.addEventListener('pointermove', event => {
+      this.showTooltip(event);
+    }
+    );
+
+    document.addEventListener('pointerout', event => {
+      this.destroy();
+    }
+    );
   }
 
   removeEventListeners(){
-    const tooltip = document.querySelector("[data-tooltip]");
-
-    tooltip.removeEventListener('pointerout', event => {
-      console.log("tooltipFoo", 'pointerout', event.clientX, event.clientY);
-      this.message.remove();
-    });
+    document.removeEventListener('pointerout', event => {
+      this.destroy();
+    }
+    );
   }
 
   destroy() {
-    // в методе дестрой снимаем обработчики событий
+    this.element.remove();
   };
 
-  // для удаления тултипа может подойти capturing
-  // обработчик движения нужен только после pointerin, а после pointerout он не должен работать
-  // удалять подсказку надо во время движения
-  // значит по поинтерин навешиваем обработчик  а по пойнтераут удаляем
+  render(content = "") {
+    const element = document.createElement('div');
+    element.classList.add('tooltip');
+    element.innerHTML = content;
+    document.body.append(element);
+    this.element = element;
+  }
 
-  // render() {
-  //   const element = document.createElement('div');
-  //   element.innerHTML = this.template;
-  //   this.element = element.firstElementChild;
-  // }
-  //
-  // template(message) {
-  //   console.log("template", message);
-  //   return `
-  //   <body>
-  //       <div className="tooltip">${message}</div>
-  //   </body>
-  //   `;
-  // }
+  initialize(){};
 }
 
 const tooltip = new Tooltip();
