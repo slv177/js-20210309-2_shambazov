@@ -50,14 +50,10 @@ export default class ColumnChart {
       const valueLabel = this.element.querySelector(".column-chart__header");
       valueLabel.innerHTML = this.getValue();
 
-      // console.log("***");
       const chartGraph = this.element.querySelector('.column-chart__chart');
-      console.log('this.getColumnProps(this.data)', this.getColumnProps(this.data));
 
-      // console.log("** **");
       const columnProps = this.getColumnProps(this.data);
-      // console.log("** ** *", this.label, columnProps);
-      chartGraph.innerHTML = this.drawChartGraph(columnProps);console.log("** ** ** chartGraph.innerHTML", this.label, );
+      chartGraph.innerHTML = this.drawChartGraph(columnProps);
 
       this.update();
     });
@@ -70,18 +66,14 @@ export default class ColumnChart {
   async getData(url) {
     const response = await fetch(url);
     const data = await response.json();
-    console.log("getData data", data);
     this.data = data;
   }
 
   getColumnProps(data) {
-    console.log("getColumnProps data", data);
     // const maxValue = Math.max(...data);
     const maxValue = this.getMaxValue();
     const scale = 50 / maxValue;
     return Object.values(data).map(item => {
-      console.log("getColumnProps data percent", (item / maxValue * 100).toFixed(0) + '%');
-      console.log("getColumnProps data value", String(Math.floor(item * scale)));
       return {
         percent: (item / maxValue * 100).toFixed(0) + '%',
         value: String(Math.floor(item * scale))
@@ -112,18 +104,14 @@ export default class ColumnChart {
       valueLabel.innerHTML = this.getValue();
 
       const chartGraph = this.element.querySelector('.column-chart__chart');
-      console.log('this.getColumnProps(this.data)', this.getColumnProps(this.data));
-
       const columnProps = this.getColumnProps(this.data);
 
-      chartGraph.innerHTML = this.drawChartGraph(columnProps);console.log("** ** ** chartGraph.innerHTML", this.label, );
+      chartGraph.innerHTML = this.drawChartGraph(columnProps);
 
     });
 
-    console.log("update this data", this.label, this.data);
     const chartGraph = document.querySelector('.column-chart__chart');
     const columnProps = this.getColumnProps(this.data);
-    console.log("update columnProps", this.label, columnProps);
     chartGraph.innerHTML = this.drawChartGraph(columnProps);
   }
 
