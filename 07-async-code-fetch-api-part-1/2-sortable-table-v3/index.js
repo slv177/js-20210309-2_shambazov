@@ -1,9 +1,41 @@
-import fetchJson from './utils/fetch-json.js';
-
 const BACKEND_URL = 'https://course-js.javascript.ru/api/dashboard/bestsellers?from=2021-03-06T07%3A54%3A34.307Z&to=2021-04-05T07%3A54%3A34.307Z&_sort=title&_order=asc&_start=0&_end=30';
 
-
 export default class SortableTable {
+
+  onSortClick = event => {
+    console.log("onSortClick");
+    const column = event.target.closest('[data-sortable="true"]');
+
+    const toggleOrder = order => {
+      const orders = {
+        asc: 'desc',
+        desc: 'asc'
+      };
+      return orders[order];
+    };
+
+    this.currentUrl = this.createUrl();
+    console.log("this.currentUrl ->", this.currentUrl);
+    this.getData(this.currentUrl).then(_ => {
+      console.log("this.getData(currentUrl)", this.data);
+      this.render();
+    });
+
+    //
+    // if (column) {
+    //   const { id, order} = column.dataset;
+    //   const sortedData = this.sortStrings(id, toggleOrder(order));
+    //   const arrow = column.querySelector('.sortable-table__sort-arrow');
+    //
+    //   column.dataset.order = toggleOrder(order);
+    //
+    //   if (!arrow) {
+    //     column.append(this.subElements.arrow);
+    //   }
+    //
+    //   this.subElements.body.innerHTML = this.getTableRows(sortedData);
+    // }
+  };
 
   constructor(
     header = [],
@@ -11,7 +43,10 @@ export default class SortableTable {
   ) {
     this.header = header;
     this.url = url;
-    this.render(this.data);
+    let newurl = this.createUrl();
+    console.log("constructor newurl ", newurl);
+    this.getData(newurl).then(result => this.render());
+
   }
 
   render() {
@@ -19,21 +54,48 @@ export default class SortableTable {
     element.innerHTML = this.tableTemplate;
     this.element = element.firstElementChild;
     document.body.append(element);
+
     const tableHeaderRow = (document.createElement('div'));
     tableHeaderRow.innerHTML = this.tableHeaderRow;
     element.append(tableHeaderRow);
     const tableHeaderRowCollection = tableHeaderRow.children;
-    const header = document.querySelector(".sortable-table__header")
+    const header = document.querySelector(".sortable-table__header");
     while (tableHeaderRowCollection.length > 0)
     {
-      header.append(tableHeaderRowCollection[0])
+      header.append(tableHeaderRowCollection[0]);
     }
 
+    this.subElements = this.getSubElements(element);
+    this.initEventListeners();
+
     this.getData(BACKEND_URL).then(_ => {
+      console.log("this.getData(BACKEND_URL)", this.data);
       const body = document.querySelector(".sortable-table__body");
       body.innerHTML = this.tableBodyRow(this.data);
       this.subElements = this.getSubElements(element);
     });
+  }
+
+  initEventListeners() {
+    console.log("initEventListeners");
+    console.log(this.subElements);
+    this.subElements.header.addEventListener('pointerdown', this.onSortClick);
+  }
+
+  createUrl(from = '2021-03-06T07:54:34.307Z', to = '2021-04-05T07:54:34.307Z', sort = 'title', order = 'asc', start = 0, end = 30) {
+    let newurl = new URL('api/dashboard/bestsellers', 'https://course-js.javascript.ru/');
+    newurl.searchParams.set('from', from);
+    newurl.searchParams.set('to', to);
+    newurl.searchParams.set('_sort', sort);
+    newurl.searchParams.set('_order', order);
+    newurl.searchParams.set('_start', start);
+    newurl.searchParams.set('_end', end);
+    console.log("newurl ", newurl);
+    return newurl;
+  }
+
+  async getDataTest(url) {
+    return await fetch(url);
   }
 
   async getData(url) {
