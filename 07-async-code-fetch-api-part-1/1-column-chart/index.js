@@ -21,21 +21,7 @@ export default class ColumnChart {
   render() {
 
     const element = document.createElement('div');
-    element.innerHTML = `
-      <div>
-        <div class="column-chart " style="--chart-height: 50">
-          <div class="column-chart__title">
-            Total orders
-            <a href="/sales" class="column-chart__link"></a>
-          </div>
-          <div class="column-chart__container">
-            <div data-element="header" class="column-chart__header"></div>
-            <div data-element="body" class="column-chart__chart">
-            </div>
-          </div>
-        </div>
-      </div>
-      `;
+    element.innerHTML = this.getBasicHtml();
     this.element = element.firstElementChild;
     this.element.classList.add('column-chart_loading');
 
@@ -70,7 +56,6 @@ export default class ColumnChart {
   }
 
   getColumnProps(data) {
-    // const maxValue = Math.max(...data);
     const maxValue = this.getMaxValue();
     const scale = 50 / maxValue;
     return Object.values(data).map(item => {
@@ -131,6 +116,24 @@ export default class ColumnChart {
       };
     });
     return result;
+  }
+
+  getBasicHtml() {
+    return `
+      <div>
+        <div class="column-chart " style="--chart-height: 50">
+          <div class="column-chart__title">
+            Total orders
+            <a href="/sales" class="column-chart__link"></a>
+          </div>
+          <div class="column-chart__container">
+            <div data-element="header" class="column-chart__header"></div>
+            <div data-element="body" class="column-chart__chart">
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
   }
 
   remove () {
