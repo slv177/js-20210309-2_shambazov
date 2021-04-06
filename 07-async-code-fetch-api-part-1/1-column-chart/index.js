@@ -3,8 +3,8 @@ export default class ColumnChart {
   constructor(
     {url = '',
       range = {
-        from: '',
-        to: '',
+        from: new Date(),
+        to: new Date(),
       },
       label = '', }
   ) {
@@ -15,6 +15,8 @@ export default class ColumnChart {
     this.label = label;
     this.link = '/link'
     this.value = 100;
+    // this.chartHeight = 50;
+
     this.render();
   }
 
@@ -42,6 +44,9 @@ export default class ColumnChart {
       chartGraph.innerHTML = this.drawChartGraph(columnProps);
 
       this.update();
+
+      this.subElements = this.getSubElements(this.element);
+      this.initEventListeners();
     });
   }
 
@@ -123,7 +128,7 @@ export default class ColumnChart {
       <div>
         <div class="column-chart " style="--chart-height: 50">
           <div class="column-chart__title">
-            Total orders
+            ${this.label}
             <a href="/sales" class="column-chart__link"></a>
           </div>
           <div class="column-chart__container">
@@ -145,4 +150,11 @@ export default class ColumnChart {
     // NOTE: удаляем обработчики событий, если они есть
   }
 
+  getSubElements(element) {
+    const elements = element.querySelectorAll('[data-element]');
+    return [...elements].reduce((accum, subElement) => {
+      accum[subElement.dataset.element] = subElement;
+      return accum;
+    }, {});
+  }
 }

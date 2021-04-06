@@ -6,35 +6,24 @@ export default class SortableTable {
     console.log("onSortClick");
     const column = event.target.closest('[data-sortable="true"]');
 
-    const toggleOrder = order => {
-      const orders = {
-        asc: 'desc',
-        desc: 'asc'
-      };
-      return orders[order];
-    };
+    // const toggleOrder = order => {
+    //   const orders = {
+    //     asc: 'desc',
+    //     desc: 'asc'
+    //   };
+    //   this.order = orders[order];
+    // };
 
-    this.currentUrl = this.createUrl();
-    console.log("this.currentUrl ->", this.currentUrl);
-    this.getData(this.currentUrl).then(_ => {
+    this.order = 'desc';
+
+    this.sort = column.dataset.id;
+    console.log("this.sort", this.sort);
+    const currentUrl = this.createUrl();
+    console.log("this.currentUrl ->", currentUrl);
+    this.getData(currentUrl).then(_ => {
       console.log("this.getData(currentUrl)", this.data);
-      this.render();
+      this.update();
     });
-
-    //
-    // if (column) {
-    //   const { id, order} = column.dataset;
-    //   const sortedData = this.sortStrings(id, toggleOrder(order));
-    //   const arrow = column.querySelector('.sortable-table__sort-arrow');
-    //
-    //   column.dataset.order = toggleOrder(order);
-    //
-    //   if (!arrow) {
-    //     column.append(this.subElements.arrow);
-    //   }
-    //
-    //   this.subElements.body.innerHTML = this.getTableRows(sortedData);
-    // }
   };
 
   constructor(
@@ -43,55 +32,52 @@ export default class SortableTable {
   ) {
     this.header = header;
     this.url = url;
-    let newurl = this.createUrl();
-    console.log("constructor newurl ", newurl);
-    this.getData(newurl).then(result => this.render());
-
+    let newUrl = this.createUrl();
+    console.log("constructor newurl ", newUrl);
+    this.render();
+    this.getData(newUrl).then(result => this.update());
   }
 
   render() {
+    console.log("render");
     const element = document.createElement('div');
     element.innerHTML = this.tableTemplate;
     this.element = element.firstElementChild;
-    document.body.append(element);
 
     const tableHeaderRow = (document.createElement('div'));
     tableHeaderRow.innerHTML = this.tableHeaderRow;
     element.append(tableHeaderRow);
+
     const tableHeaderRowCollection = tableHeaderRow.children;
-    const header = document.querySelector(".sortable-table__header");
+    const header = element.querySelector(".sortable-table__header");
     while (tableHeaderRowCollection.length > 0)
     {
       header.append(tableHeaderRowCollection[0]);
     }
-
-    this.subElements = this.getSubElements(element);
+    this.subElements = this.getSubElements(this.element);
     this.initEventListeners();
+  }
 
-    this.getData(BACKEND_URL).then(_ => {
-      console.log("this.getData(BACKEND_URL)", this.data);
-      const body = document.querySelector(".sortable-table__body");
-      body.innerHTML = this.tableBodyRow(this.data);
-      this.subElements = this.getSubElements(element);
-    });
+  update() {
+    console.log("update");
+    const body = this.element.querySelector(".sortable-table__body");
+    body.innerHTML = this.tableBodyRow(this.data);
   }
 
   initEventListeners() {
-    console.log("initEventListeners");
-    console.log(this.subElements);
     this.subElements.header.addEventListener('pointerdown', this.onSortClick);
   }
 
-  createUrl(from = '2021-03-06T07:54:34.307Z', to = '2021-04-05T07:54:34.307Z', sort = 'title', order = 'asc', start = 0, end = 30) {
-    let newurl = new URL('api/dashboard/bestsellers', 'https://course-js.javascript.ru/');
-    newurl.searchParams.set('from', from);
-    newurl.searchParams.set('to', to);
-    newurl.searchParams.set('_sort', sort);
-    newurl.searchParams.set('_order', order);
-    newurl.searchParams.set('_start', start);
-    newurl.searchParams.set('_end', end);
-    console.log("newurl ", newurl);
-    return newurl;
+  createUrl(from = '2021-03-06T07:54:34.307Z', to = '2021-04-05T07:54:34.307Z') {
+    let newUrl = new URL('api/rest/products', 'https://course-js.javascript.ru/');
+    // newUrl.searchParams.set('from', from);
+    // newUrl.searchParams.set('to', to);
+    newUrl.searchParams.set('_sort', this.sort);
+    newUrl.searchParams.set('_order', this.order);
+    newUrl.searchParams.set('_start', 0);
+    newUrl.searchParams.set('_end', 10);
+    console.log("newUrl ", newUrl);
+    return newUrl;
   }
 
   async getDataTest(url) {
@@ -126,7 +112,7 @@ export default class SortableTable {
 
   get tableHeaderRow() {
 
-    return this.header.map(item => `<div class="sortable-table__cell" data-id=${item.id} data-sortable="false"><span>${item.title}</span></div>`).join("");
+    return this.header.map(item => `<div class="sortable-table__cell" data-id=${item.id} data-sortable="true"><span>${item.title}</span></div>`).join("");
 
   }
 
@@ -173,33 +159,33 @@ export default class SortableTable {
     }
   }
 
-  sort(fieldValue, orderValue) {
-    this.data = this.sortStrings(fieldValue, orderValue);
-    this.removeElementsByClass('sortable-table__header');
-    this.removeElementsByClass('sortable-table__body');
-    this.removeElementsByClass('products-list__container');
-    this.render(this.data);
-  }
-
-  sortStrings(field = 'title', order = 'asc') {
-
-    switch (order){
-    case "desc":
-      return sort(this.data, -1);
-      break;
-    default:
-      return sort(this.data, 1);
-    }
-
-    function sort(arr, direction){
-      return arr.sort(function (a, b) {
-        if (typeof b[field] === 'number') {
-          return direction * a[field] - b[field];
-        }
-        return direction * a[field].localeCompare(b[field], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
-      });
-    }
-  }
+  // sort(fieldValue, orderValue) {
+  //   this.data = this.sortStrings(fieldValue, orderValue);
+  //   this.removeElementsByClass('sortable-table__header');
+  //   this.removeElementsByClass('sortable-table__body');
+  //   this.removeElementsByClass('products-list__container');
+  //   this.render(this.data);
+  // }
+  //
+  // sortStrings(field = 'title', order = 'asc') {
+  //
+  //   switch (order){
+  //   case "desc":
+  //     return sort(this.data, -1);
+  //     break;
+  //   default:
+  //     return sort(this.data, 1);
+  //   }
+  //
+  //   function sort(arr, direction){
+  //     return arr.sort(function (a, b) {
+  //       if (typeof b[field] === 'number') {
+  //         return direction * a[field] - b[field];
+  //       }
+  //       return direction * a[field].localeCompare(b[field], ["ru-ru-u-kf-upper"], {sensitivity: "case"});
+  //     });
+  //   }
+  // }
 
   remove() {
     this.element.remove();
